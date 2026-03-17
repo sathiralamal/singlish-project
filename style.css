@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'GNS';
+  src: url('fonts/gns.ttf') format('truetype');
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -102,6 +107,11 @@ textarea#sinhala {
   color: #2d1657;
 }
 
+textarea#sinhala.gns-font {
+  font-family: 'GNS', serif;
+  font-size: 1.3rem;
+}
+
 .arrow {
   font-size: 2rem;
   color: var(--primary);
@@ -110,11 +120,57 @@ textarea#sinhala {
   flex-shrink: 0;
 }
 
-/* ── Clear button ── */
+/* ── Controls row ── */
 .controls {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 0.8rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ── Mode toggle ── */
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0.35rem 0.9rem;
+  box-shadow: var(--shadow);
+}
+
+.mode-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text);
+  user-select: none;
+}
+
+.radio-option input[type="radio"] {
+  accent-color: var(--primary);
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+}
+
+.radio-option:has(input:checked) span {
+  color: var(--primary);
+  font-weight: 600;
 }
 
 button.clear-btn {

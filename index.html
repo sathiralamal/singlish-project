@@ -15,7 +15,7 @@
   <div class="container">
     <header>
       <h1>Singlish &rarr; Sinhala</h1>
-      <p class="subtitle">Type in Singlish and see Sinhala Unicode appear in real-time</p>
+      <p class="subtitle">Type in Singlish and see Sinhala appear in real-time</p>
     </header>
 
     <main class="editor">
@@ -33,7 +33,7 @@
       <div class="arrow">&#8594;</div>
 
       <div class="text-panel">
-        <label for="sinhala">Sinhala Unicode &#x200B;(සිංහල)</label>
+        <label id="outputLabel" for="sinhala">Sinhala Unicode &#x200B;(සිංහල)</label>
         <textarea
           id="sinhala"
           readonly
@@ -43,6 +43,17 @@
     </main>
 
     <div class="controls">
+      <div class="mode-toggle">
+        <span class="mode-label">Output Mode:</span>
+        <label class="radio-option">
+          <input type="radio" name="outputMode" value="unicode" checked />
+          <span>Unicode</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="outputMode" value="font" />
+          <span>Sinhala Font (GNS)</span>
+        </label>
+      </div>
       <button class="clear-btn" id="clearBtn">Clear</button>
     </div>
 
@@ -143,14 +154,38 @@
     </section>
   </div>
 
+  <!-- s() helper required by gns.js -->
+  <script>function s(str, regex, rep) { return str.replace(regex, rep); }</script>
+  <script src="gns.js"></script>
   <script src="transliterate.js"></script>
   <script>
-    const singlishEl = document.getElementById('singlish');
-    const sinhalaEl  = document.getElementById('sinhala');
-    const clearBtn   = document.getElementById('clearBtn');
+    const singlishEl   = document.getElementById('singlish');
+    const sinhalaEl    = document.getElementById('sinhala');
+    const clearBtn     = document.getElementById('clearBtn');
+    const outputLabel  = document.getElementById('outputLabel');
+    const modeRadios   = document.querySelectorAll('input[name="outputMode"]');
 
-    singlishEl.addEventListener('input', () => {
-      sinhalaEl.value = transliterate(singlishEl.value);
+    function getMode() {
+      return document.querySelector('input[name="outputMode"]:checked').value;
+    }
+
+    function convert() {
+      const unicode = transliterate(singlishEl.value);
+      if (getMode() === 'font') {
+        sinhalaEl.value = writeSinhalaWindowsKB(unicode);
+        sinhalaEl.classList.add('gns-font');
+        outputLabel.textContent = 'Sinhala Font (GNS)';
+      } else {
+        sinhalaEl.value = unicode;
+        sinhalaEl.classList.remove('gns-font');
+        outputLabel.textContent = 'Sinhala Unicode \u200B(සිංහල)';
+      }
+    }
+
+    singlishEl.addEventListener('input', convert);
+
+    modeRadios.forEach(radio => {
+      radio.addEventListener('change', convert);
     });
 
     clearBtn.addEventListener('click', () => {
