@@ -1,0 +1,9 @@
+{
+  "name": "singlish-app",
+  "version": "1.0.0",
+  "description": "Real-time Singlish to Sinhala Unicode converter",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

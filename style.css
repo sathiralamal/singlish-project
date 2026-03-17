@@ -1,0 +1,226 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #6c3fd6;
+  --primary-light: #ede8fb;
+  --border: #ddd;
+  --bg: #f7f6fc;
+  --text: #1a1a2e;
+  --muted: #666;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(108, 63, 214, 0.10);
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+header .subtitle {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+/* ── Editor row ── */
+.editor {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.text-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.text-panel label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+textarea {
+  width: 100%;
+  height: 260px;
+  padding: 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1.15rem;
+  line-height: 1.8;
+  resize: vertical;
+  background: #fff;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+textarea:focus {
+  border-color: var(--primary);
+}
+
+textarea#singlish {
+  font-family: 'Inter', monospace;
+}
+
+textarea#sinhala {
+  font-family: 'Noto Sans Sinhala', 'Iskoola Pota', 'FM Abhaya', system-ui;
+  font-size: 1.3rem;
+  background: var(--primary-light);
+  border-color: #c4b0f0;
+  cursor: default;
+  color: #2d1657;
+}
+
+.arrow {
+  font-size: 2rem;
+  color: var(--primary);
+  padding-top: 2.1rem;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* ── Clear button ── */
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.8rem;
+}
+
+button.clear-btn {
+  padding: 0.4rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+button.clear-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ── Reference tables ── */
+.reference {
+  margin-top: 3rem;
+}
+
+.reference h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.ref-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.ref-card h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.75rem;
+}
+
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.ref-table th {
+  text-align: left;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.ref-table td {
+  padding: 0.28rem 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ref-table td:first-child {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #444;
+  width: 40%;
+}
+
+.ref-table td:nth-child(2) {
+  font-family: 'Noto Sans Sinhala', 'Iskoola Pota', system-ui;
+  font-size: 1.1rem;
+  color: var(--primary);
+  width: 30%;
+}
+
+.ref-table td:nth-child(3) {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .editor {
+    flex-direction: column;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+    align-self: center;
+    padding-top: 0;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+  }
+}

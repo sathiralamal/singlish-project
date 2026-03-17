@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Singlish to Sinhala Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Singlish &rarr; Sinhala</h1>
+      <p class="subtitle">Type in Singlish and see Sinhala Unicode appear in real-time</p>
+    </header>
+
+    <main class="editor">
+      <div class="text-panel">
+        <label for="singlish">Singlish (English keyboard)</label>
+        <textarea
+          id="singlish"
+          placeholder="Type Singlish here...&#10;&#10;e.g.  mama sinhalaya&#10;      kohomada&#10;      api gedara yanawa"
+          spellcheck="false"
+          autocorrect="off"
+          autocapitalize="off"
+        ></textarea>
+      </div>
+
+      <div class="arrow">&#8594;</div>
+
+      <div class="text-panel">
+        <label for="sinhala">Sinhala Unicode &#x200B;(සිංහල)</label>
+        <textarea
+          id="sinhala"
+          readonly
+          placeholder="සිංහල මෙහි දිස්වේ..."
+        ></textarea>
+      </div>
+    </main>
+
+    <div class="controls">
+      <button class="clear-btn" id="clearBtn">Clear</button>
+    </div>
+
+    <!-- Reference tables -->
+    <section class="reference">
+      <h2>Quick Reference</h2>
+      <div class="ref-grid">
+
+        <div class="ref-card">
+          <h3>Vowels</h3>
+          <table class="ref-table">
+            <thead><tr><th>Type</th><th>Sinhala</th><th>Sound</th></tr></thead>
+            <tbody>
+              <tr><td>a</td><td>අ / &#x0DCF;</td><td>short a</td></tr>
+              <tr><td>aa</td><td>ආ / &#x0DCF;</td><td>long aa</td></tr>
+              <tr><td>ae</td><td>ඇ / &#x0DD0;</td><td>short æ</td></tr>
+              <tr><td>aee</td><td>ඈ / &#x0DD1;</td><td>long æ</td></tr>
+              <tr><td>i</td><td>ඉ / &#x0DD2;</td><td>short i</td></tr>
+              <tr><td>ii</td><td>ඊ / &#x0DD3;</td><td>long ii</td></tr>
+              <tr><td>u</td><td>උ / &#x0DD4;</td><td>short u</td></tr>
+              <tr><td>uu</td><td>ඌ / &#x0DD6;</td><td>long uu</td></tr>
+              <tr><td>e</td><td>එ / &#x0DD9;</td><td>short e</td></tr>
+              <tr><td>ee</td><td>ඒ / &#x0DDA;</td><td>long ee</td></tr>
+              <tr><td>o</td><td>ඔ / &#x0DDC;</td><td>short o</td></tr>
+              <tr><td>oo</td><td>ඕ / &#x0DDD;</td><td>long oo</td></tr>
+              <tr><td>ai</td><td>ඓ / &#x0DDB;</td><td>ai</td></tr>
+              <tr><td>au</td><td>ඖ / &#x0DDE;</td><td>au</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ref-card">
+          <h3>Basic Consonants</h3>
+          <table class="ref-table">
+            <thead><tr><th>Type</th><th>Sinhala</th><th>Type</th></tr></thead>
+            <tbody>
+              <tr><td>k</td><td>ක</td><td>g → ග</td></tr>
+              <tr><td>ch / c</td><td>ච</td><td>j → ජ</td></tr>
+              <tr><td>t</td><td>ත</td><td>d → ද</td></tr>
+              <tr><td>T</td><td>ට</td><td>D → ඩ</td></tr>
+              <tr><td>n</td><td>න</td><td>N → ණ</td></tr>
+              <tr><td>p</td><td>ප</td><td>b → බ</td></tr>
+              <tr><td>m</td><td>ම</td><td>y → ය</td></tr>
+              <tr><td>r</td><td>ර</td><td>l → ල</td></tr>
+              <tr><td>L</td><td>ළ</td><td>v / w → ව</td></tr>
+              <tr><td>s</td><td>ස</td><td>h → හ</td></tr>
+              <tr><td>f</td><td>ෆ</td><td>M → ං</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ref-card">
+          <h3>Aspirates &amp; Special</h3>
+          <table class="ref-table">
+            <thead><tr><th>Type</th><th>Sinhala</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td>kh</td><td>ඛ</td><td>asp. k</td></tr>
+              <tr><td>gh</td><td>ඝ</td><td>asp. g</td></tr>
+              <tr><td>ch</td><td>ච</td><td>cha sound</td></tr>
+              <tr><td>jh</td><td>ඣ</td><td>asp. j</td></tr>
+              <tr><td>th</td><td>ථ</td><td>asp. t</td></tr>
+              <tr><td>dh</td><td>ධ</td><td>asp. d</td></tr>
+              <tr><td>Th</td><td>ඨ</td><td>asp. T</td></tr>
+              <tr><td>Dh</td><td>ඪ</td><td>asp. D</td></tr>
+              <tr><td>ph</td><td>ඵ</td><td>asp. p</td></tr>
+              <tr><td>bh</td><td>භ</td><td>asp. b</td></tr>
+              <tr><td>sh / S</td><td>ශ</td><td>sha</td></tr>
+              <tr><td>Sh</td><td>ෂ</td><td>retroflex sh</td></tr>
+              <tr><td>ng</td><td>ඞ</td><td>velar n</td></tr>
+              <tr><td>ny</td><td>ඤ</td><td>palatal n</td></tr>
+              <tr><td>ksh</td><td>ක්ෂ</td><td>ksha</td></tr>
+              <tr><td>M</td><td>ං</td><td>anusvara</td></tr>
+              <tr><td>H</td><td>ඃ</td><td>visarga</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ref-card">
+          <h3>Examples</h3>
+          <table class="ref-table">
+            <thead><tr><th>Singlish</th><th>Sinhala</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>mama</td><td>මම</td><td>I / me</td></tr>
+              <tr><td>api</td><td>අපි</td><td>we / us</td></tr>
+              <tr><td>kohomada</td><td>කොහොමද</td><td>how are you</td></tr>
+              <tr><td>hari</td><td>හරි</td><td>OK / correct</td></tr>
+              <tr><td>Lamaya</td><td>ළමය</td><td>child</td></tr>
+              <tr><td>gedara</td><td>ගෙදර</td><td>home</td></tr>
+              <tr><td>suba</td><td>සුබ</td><td>auspicious</td></tr>
+              <tr><td>aetta</td><td>ඇත්ත</td><td>truth</td></tr>
+              <tr><td>raTa</td><td>රට</td><td>country</td></tr>
+              <tr><td>aasai</td><td>ආසයි</td><td>I like</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <script src="transliterate.js"></script>
+  <script>
+    const singlishEl = document.getElementById('singlish');
+    const sinhalaEl  = document.getElementById('sinhala');
+    const clearBtn   = document.getElementById('clearBtn');
+
+    singlishEl.addEventListener('input', () => {
+      sinhalaEl.value = transliterate(singlishEl.value);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      singlishEl.value = '';
+      sinhalaEl.value  = '';
+      singlishEl.focus();
+    });
+  </script>
+</body>
+</html>
