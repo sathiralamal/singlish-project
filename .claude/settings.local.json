@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(node -e \"\nconst { transliterate } = require\\('./transliterate.js'\\);\nconst tests = [\n  ['mama',      'මම'],\n  ['api',       'අපි'],\n  ['kohomada',  'කොහොමද'],\n  ['suba',      'සුබ'],\n  ['rata',      'රට'],\n  ['gedhara',   'ගෙදර'],\n  ['Srilanka',  'ශ්‍රිලංක'],\n  ['aMka',      'අංක'],\n  ['karana',    'කරන'],\n  ['aeththa',   'ඇත්ත'],\n];\ntests.forEach\\(\\([input, expected]\\) => {\n  const out = transliterate\\(input\\);\n  console.log\\(input.padEnd\\(14\\) + ' => ' + out + \\(out === expected ? '  ✓' : '  \\(expected: ' + expected + '\\)'\\)\\);\n}\\);\n\")",
-      "Bash(node -e \"\nconst { transliterate } = require\\('./transliterate.js'\\);\n[\n  ['mama',     'මම'],\n  ['api',      'අපි'],\n  ['kohomada', 'කොහොමද'],\n  ['suba',     'සුබ'],\n  ['raTa',     'රට'],\n  ['gedara',   'ගෙදර'],\n  ['aMka',     'අංක'],\n  ['aetta',    'ඇත්ත'],\n  ['hari',     'හරි'],\n  ['lamaya',   'ළමය'],\n].forEach\\(\\([input, expected]\\) => {\n  const out = transliterate\\(input\\);\n  const ok = out === expected ? '✓' : 'MISMATCH \\(expected: ' + expected + '\\)';\n  console.log\\(input.padEnd\\(12\\) + '=>', out, ok\\);\n}\\);\n\")"
+      "Bash(node -e \"\nconst { transliterate } = require\\('./transliterate.js'\\);\n[\n  ['mama',     'මම'],\n  ['api',      'අපි'],\n  ['kohomada', 'කොහොමද'],\n  ['suba',     'සුබ'],\n  ['raTa',     'රට'],\n  ['gedara',   'ගෙදර'],\n  ['aMka',     'අංක'],\n  ['aetta',    'ඇත්ත'],\n  ['hari',     'හරි'],\n  ['lamaya',   'ළමය'],\n].forEach\\(\\([input, expected]\\) => {\n  const out = transliterate\\(input\\);\n  const ok = out === expected ? '✓' : 'MISMATCH \\(expected: ' + expected + '\\)';\n  console.log\\(input.padEnd\\(12\\) + '=>', out, ok\\);\n}\\);\n\")",
+      "Bash(node -e \":*)",
+      "Bash(curl -sI \"http://localhost:3023/fonts/FMBindumathi.ttf\")"
     ]
   }
 }

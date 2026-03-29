@@ -30,30 +30,25 @@
         ></textarea>
       </div>
 
-      <div class="arrow">&#8594;</div>
-
       <div class="text-panel">
-        <label id="outputLabel" for="sinhala">Sinhala Unicode &#x200B;(සිංහල)</label>
-        <textarea
-          id="sinhala"
-          readonly
-          placeholder="සිංහල මෙහි දිස්වේ..."
-        ></textarea>
+        <label>Sinhala Font (GNS) &mdash; Line Editor</label>
+        <div id="gnsLineEditor" class="gns-line-editor">
+          <div class="gns-toolbar">
+            <span id="gnsLineCount" class="gns-line-count">0 lines</span>
+            <button id="gnsCopyAll" class="gns-copy-all-btn">Copy All</button>
+          </div>
+          <div class="gns-font-bar">
+            <span class="gns-font-bar-label">Font:</span>
+            <div class="gns-font-pills" id="gnsFontPills"></div>
+          </div>
+          <div id="gnsLines" class="gns-lines">
+            <div class="gns-placeholder">GNS font text will appear here line&#8209;by&#8209;line&hellip;</div>
+          </div>
+        </div>
       </div>
     </main>
 
     <div class="controls">
-      <div class="mode-toggle">
-        <span class="mode-label">Output Mode:</span>
-        <label class="radio-option">
-          <input type="radio" name="outputMode" value="unicode" checked />
-          <span>Unicode</span>
-        </label>
-        <label class="radio-option">
-          <input type="radio" name="outputMode" value="font" />
-          <span>Sinhala Font (GNS)</span>
-        </label>
-      </div>
       <button class="clear-btn" id="clearBtn">Clear</button>
     </div>
 
@@ -159,38 +154,128 @@
   <script src="gns.js"></script>
   <script src="transliterate.js"></script>
   <script>
-    const singlishEl   = document.getElementById('singlish');
-    const sinhalaEl    = document.getElementById('sinhala');
-    const clearBtn     = document.getElementById('clearBtn');
-    const outputLabel  = document.getElementById('outputLabel');
-    const modeRadios   = document.querySelectorAll('input[name="outputMode"]');
+    // ── Available Sinhala fonts (add more entries here as you drop .ttf files into /fonts/) ──
+    var FONTS = [
+      { name: 'FM Bindumathi', family: 'FMBindumathi', file: 'FMBindumathi.ttf' },
+    ];
 
-    function getMode() {
-      return document.querySelector('input[name="outputMode"]:checked').value;
+    var loadedFonts = {};  // track which font-faces have been injected
+
+    function ensureFontLoaded(font) {
+      if (loadedFonts[font.family]) return;
+      var style = document.createElement('style');
+      style.textContent = "@font-face { font-family: '" + font.family + "'; src: url('fonts/" + font.file + "') format('truetype'); }";
+      document.head.appendChild(style);
+      loadedFonts[font.family] = true;
     }
 
-    function convert() {
-      const unicode = transliterate(singlishEl.value);
-      if (getMode() === 'font') {
-        sinhalaEl.value = writeSinhalaWindowsKB(unicode);
-        sinhalaEl.classList.add('gns-font');
-        outputLabel.textContent = 'Sinhala Font (GNS)';
-      } else {
-        sinhalaEl.value = unicode;
-        sinhalaEl.classList.remove('gns-font');
-        outputLabel.textContent = 'Sinhala Unicode \u200B(සිංහල)';
+    var currentFontFamily = FONTS[0].family;
+
+    const singlishEl     = document.getElementById('singlish');
+    const clearBtn       = document.getElementById('clearBtn');
+    const gnsLineEditor  = document.getElementById('gnsLineEditor');
+    const gnsLinesEl     = document.getElementById('gnsLines');
+    const gnsLineCountEl = document.getElementById('gnsLineCount');
+    const gnsCopyAllBtn  = document.getElementById('gnsCopyAll');
+    const gnsFontPillsEl = document.getElementById('gnsFontPills');
+
+    let currentGnsLines = [];
+
+    // ── Font picker ──
+    function renderFontPills() {
+      gnsFontPillsEl.innerHTML = FONTS.map(function(f) {
+        var isActive = f.family === currentFontFamily;
+        var previewHtml = GNS_PREVIEW
+          ? '<span class="gns-pill-preview" style="font-family:\'' + f.family + '\',serif">' + escapeHtml(GNS_PREVIEW) + '</span>'
+          : '<span class="gns-pill-preview gns-pill-preview-empty">no preview</span>';
+        return '<button class="gns-font-pill' + (isActive ? ' active' : '') + '" ' +
+          'data-family="' + f.family + '" ' +
+          'title="' + f.file + '">' +
+          '<span class="gns-pill-name">' + f.name + '</span>' +
+          previewHtml +
+          '</button>';
+      }).join('');
+    }
+
+    gnsFontPillsEl.addEventListener('click', function(e) {
+      var pill = e.target.closest('.gns-font-pill');
+      if (!pill) return;
+      currentFontFamily = pill.dataset.family;
+      document.documentElement.style.setProperty('--gns-active-font', "'" + currentFontFamily + "'");
+      gnsFontPillsEl.querySelectorAll('.gns-font-pill').forEach(function(p) {
+        p.classList.toggle('active', p.dataset.family === currentFontFamily);
+      });
+    });
+
+    // Compute a GNS-encoded preview string using the actual conversion pipeline
+    var GNS_PREVIEW = '';
+    try {
+      GNS_PREVIEW = writeSinhalaWindowsKB(transliterate('mama kohomada'));
+    } catch(e) {}
+
+    // Pre-load all fonts and render pills on page ready
+    FONTS.forEach(function(f) { ensureFontLoaded(f); });
+    renderFontPills();
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function renderGnsLines(lines) {
+      currentGnsLines = lines;
+      const total = lines.length;
+      gnsLineCountEl.textContent = total + ' line' + (total !== 1 ? 's' : '');
+
+      if (total === 0 || (total === 1 && lines[0] === '')) {
+        gnsLinesEl.innerHTML = '<div class="gns-placeholder">GNS font text will appear here line&#8209;by&#8209;line&hellip;</div>';
+        return;
       }
+
+      gnsLinesEl.innerHTML = lines.map(function(line, idx) {
+        var isEmpty = line === '';
+        return '<div class="gns-line-row' + (isEmpty ? ' gns-line-empty' : '') + '">' +
+          '<span class="gns-line-num">' + (idx + 1) + '</span>' +
+          '<span class="gns-line-text">' + escapeHtml(line) + '</span>' +
+          '<span class="gns-char-count">' + line.length + '<span class="gns-ch-label">ch</span></span>' +
+          '<button class="gns-copy-btn" data-idx="' + idx + '" title="Copy line ' + (idx + 1) + '">Copy</button>' +
+          '</div>';
+      }).join('');
+    }
+
+    // Event delegation — one listener for all copy buttons
+    gnsLinesEl.addEventListener('click', function(e) {
+      var btn = e.target.closest('.gns-copy-btn');
+      if (!btn) return;
+      var idx = parseInt(btn.dataset.idx, 10);
+      var text = currentGnsLines[idx] !== undefined ? currentGnsLines[idx] : '';
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1200);
+      });
+    });
+
+    gnsCopyAllBtn.addEventListener('click', function() {
+      navigator.clipboard.writeText(currentGnsLines.join('\n')).then(function() {
+        gnsCopyAllBtn.textContent = '✓ Copied!';
+        setTimeout(function() { gnsCopyAllBtn.textContent = 'Copy All'; }, 1500);
+      });
+    });
+
+    function convert() {
+      var unicode = transliterate(singlishEl.value);
+      var gnsText = writeSinhalaWindowsKB(unicode);
+      renderGnsLines(gnsText.split('\n'));
     }
 
     singlishEl.addEventListener('input', convert);
 
-    modeRadios.forEach(radio => {
-      radio.addEventListener('change', convert);
-    });
-
-    clearBtn.addEventListener('click', () => {
+    clearBtn.addEventListener('click', function() {
       singlishEl.value = '';
-      sinhalaEl.value  = '';
+      convert();
       singlishEl.focus();
     });
   </script>
