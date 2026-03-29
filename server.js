@@ -10,11 +10,15 @@ const mimeTypes = {
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".ico": "image/x-icon",
+  ".ttf": "font/ttf",
+  ".otf": "font/otf",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
 };
 
 const server = http.createServer((req, res) => {
   let urlPath = req.url === "/" ? "/index.html" : req.url;
-  const filePath = path.join(ROOT, urlPath);
+  const filePath = path.join(ROOT, decodeURIComponent(urlPath));
   const ext = path.extname(filePath);
   const contentType = mimeTypes[ext] || "text/plain; charset=utf-8";
 
