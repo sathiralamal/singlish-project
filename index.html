@@ -248,6 +248,15 @@
       if (!btn) return;
       var idx = parseInt(btn.dataset.idx, 10);
       var text = currentGnsLines[idx] !== undefined ? currentGnsLines[idx] : '';
+      
+      if (!text || text.trim() === '') {
+        btn.textContent = 'Empty';
+        setTimeout(function() {
+          btn.textContent = 'Copy';
+        }, 1000);
+        return;
+      }
+      
       navigator.clipboard.writeText(text).then(function() {
         btn.textContent = '✓';
         btn.classList.add('copied');
@@ -265,19 +274,42 @@
     });
 
     gnsCopyAllBtn.addEventListener('click', function() {
-      var textToCopy = currentGnsLines.join('\n');
-      if (textToCopy.trim() === '') {
+      // Get the actual text content from all the visible GNS line elements
+      var allLines = [];
+      document.querySelectorAll('.gns-line-text').forEach(function(lineEl) {
+        var text = lineEl.textContent.trim();
+        if (text && text !== '—') {
+          allLines.push(text);
+        }
+      });
+      
+      var textToCopy = allLines.join('\n');
+      
+      if (!textToCopy || textToCopy.trim() === '') {
         gnsCopyAllBtn.textContent = 'Nothing to copy';
-        setTimeout(function() { gnsCopyAllBtn.textContent = 'Copy All'; }, 1500);
+        gnsCopyAllBtn.classList.add('copied');
+        setTimeout(function() { 
+          gnsCopyAllBtn.textContent = 'Copy All';
+          gnsCopyAllBtn.classList.remove('copied');
+        }, 1500);
         return;
       }
+      
       navigator.clipboard.writeText(textToCopy).then(function() {
         gnsCopyAllBtn.textContent = '✓ Copied!';
-        setTimeout(function() { gnsCopyAllBtn.textContent = 'Copy All'; }, 1500);
+        gnsCopyAllBtn.classList.add('copied');
+        setTimeout(function() { 
+          gnsCopyAllBtn.textContent = 'Copy All';
+          gnsCopyAllBtn.classList.remove('copied');
+        }, 1500);
       }).catch(function(err) {
         console.error('Copy All failed:', err);
         gnsCopyAllBtn.textContent = 'Failed';
-        setTimeout(function() { gnsCopyAllBtn.textContent = 'Copy All'; }, 1500);
+        gnsCopyAllBtn.classList.add('copied');
+        setTimeout(function() { 
+          gnsCopyAllBtn.textContent = 'Copy All';
+          gnsCopyAllBtn.classList.remove('copied');
+        }, 1500);
       });
     });
 
