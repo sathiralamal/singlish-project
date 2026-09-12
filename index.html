@@ -255,12 +255,28 @@
           btn.textContent = 'Copy';
           btn.classList.remove('copied');
         }, 1200);
+      }).catch(function(err) {
+        console.error('Copy failed:', err);
+        btn.textContent = 'Failed';
+        setTimeout(function() {
+          btn.textContent = 'Copy';
+        }, 1200);
       });
     });
 
     gnsCopyAllBtn.addEventListener('click', function() {
-      navigator.clipboard.writeText(currentGnsLines.join('\n')).then(function() {
+      var textToCopy = currentGnsLines.join('\n');
+      if (textToCopy.trim() === '') {
+        gnsCopyAllBtn.textContent = 'Nothing to copy';
+        setTimeout(function() { gnsCopyAllBtn.textContent = 'Copy All'; }, 1500);
+        return;
+      }
+      navigator.clipboard.writeText(textToCopy).then(function() {
         gnsCopyAllBtn.textContent = '✓ Copied!';
+        setTimeout(function() { gnsCopyAllBtn.textContent = 'Copy All'; }, 1500);
+      }).catch(function(err) {
+        console.error('Copy All failed:', err);
+        gnsCopyAllBtn.textContent = 'Failed';
         setTimeout(function() { gnsCopyAllBtn.textContent = 'Copy All'; }, 1500);
       });
     });
